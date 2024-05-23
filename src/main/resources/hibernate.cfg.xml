@@ -8,7 +8,7 @@
         <property name="show_sql">true</property>
         <!-- NONE, CREATE, CREATE-DROP, UPDATE, VALIDATE -->
         <property name="hibernate.hbm2ddl.auto">create</property>
-        <mapping class="ru.gb.Homework4.User"/>
-        <mapping class="ru.gb.Homework4.Pet"/>
+        <mapping class="ru.gb.Homework4.Student"/>
+        <mapping class="ru.gb.Homework4.Group"/>
     </session-factory>
 </hibernate-configuration>
