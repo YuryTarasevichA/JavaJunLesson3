@@ -1,4 +1,8 @@
-package ru.gb;
+package ru.gb.Homework4;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 import java.sql.*;
 
@@ -22,14 +26,23 @@ import java.sql.*;
  * Замечание: можно использовать ЛЮБУЮ базу данных: h2, postgres, mysql, ...
  */
 
+/**
+ * Перенести структуру дз третьего урока на JPA:
+ * 1. Описать сущности Student и Group
+ * 2. Написать запросы: Find, Persist, Remove
+ * 3. ... поупражняться с разными запросами ...
+ */
+
 public class Db {
-    private static final String URL = "jdbc:mysql://localhost:3307/STUDENTS";
+    private static final String URL = "jdbc:mysql://localhost:3307/";
+    private static final String DB_NAME = "STUDENTS";
     private static final String USER = "root";
     private static final String PASSWORD = "admin";
 
+
     public static void con() {
         try {
-            Connection con = DriverManager.getConnection(URL, USER, PASSWORD);
+            Connection con = DriverManager.getConnection(URL + DB_NAME, USER, PASSWORD);
             Statement stmt = con.createStatement();
             //stmt.execute("DROP SCHEMA STUDENTS");
             //stmt.execute("CREATE SCHEMA STUDENTS");
@@ -73,5 +86,32 @@ public class Db {
         } catch (SQLException e) {
             System.err.println("Не удалось подключиться к БД: " + e.getMessage());
         }
+    }
+
+    public static Student findStudentById(Long id) {
+        EntityManager entityManager = getEntityManager();
+        return entityManager.find(Student.class, id);
+    }
+
+    public static void persistStudent(Student student) {
+        EntityManager entityManager = getEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.persist(student);
+        entityManager.getTransaction().commit();
+    }
+
+    public static void removeStudent(Long id) {
+        EntityManager entityManager = getEntityManager();
+        entityManager.getTransaction().begin();
+        Student student = entityManager.find(Student.class, id);
+        if (student != null) {
+            entityManager.remove(student);
+        }
+        entityManager.getTransaction().commit();
+    }
+
+    private static EntityManager getEntityManager() {
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("persistenceUnitName");
+        return entityManagerFactory.createEntityManager();
     }
 }
